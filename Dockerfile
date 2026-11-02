@@ -16,4 +16,4 @@ COPY --from=build /app/target/placement-preparation-portal-1.0.0.jar app.jar
 ENV PORT=8088
 EXPOSE 8088
 
-ENTRYPOINT ["java", "-Dspring.profiles.active=h2", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Dspring.profiles.active=h2 -Dserver.port=${PORT:-8088} -jar app.jar"]
