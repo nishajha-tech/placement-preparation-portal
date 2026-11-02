@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Sign In')}"></head>
+<body style="background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 100%); min-height: 100vh; display:flex; flex-direction:column;">
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <div style="flex:1; display:flex; align-items:center; justify-content:center; padding: 40px 20px;">
+        <div class="card" style="width: 100%; max-width: 440px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.1); background:#ffffff;">
+            <div style="text-align:center; margin-bottom: 24px;">
+                <div style="width:50px; height:50px; background:var(--primary-gradient); border-radius:12px; display:inline-flex; align-items:center; justify-content:center; font-size:1.6rem; color:#fff; margin-bottom:12px; box-shadow:0 0 15px rgba(79,70,229,0.4);">🎓</div>
+                <h2 style="font-size:1.6rem; font-weight:800; color:var(--text-primary);">Welcome Back</h2>
+                <p style="color:var(--text-muted); font-size:0.88rem;">Sign in to your Placement Preparation account</p>
+            </div>
+
+            <!-- Error and Success Alerts -->
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}">Invalid credentials</div>
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}">Logged out</div>
+            <div th:if="${param.registered}" class="alert alert-success">Registration successful! Please login with your credentials.</div>
+
+            <!-- Quick Login Switcher for College Viva Demonstration -->
+            <div style="background:#f1f5f9; padding:12px; border-radius:8px; margin-bottom:20px; border:1px solid #e2e8f0;">
+                <div style="font-size:0.75rem; font-weight:700; color:var(--text-secondary); text-transform:uppercase; margin-bottom:8px;">Demo Account Quick-Fill:</div>
+                <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                    <button type="button" class="btn btn-outline btn-sm" onclick="fillCreds('rahul@student.com', 'student123')">Rahul (8.4 CGPA)</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="fillCreds('sneha@student.com', 'student123')">Sneha (Backlog)</button>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="fillCreds('admin@portal.com', 'admin123')">Admin</button>
+                </div>
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="username">Email Address</label>
+                    <input type="email" id="username" name="username" class="form-control" placeholder="name@college.edu" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:8px;">Sign In to Portal</button>
+            </form>
+
+            <div style="text-align:center; margin-top:20px; font-size:0.88rem; color:var(--text-secondary);">
+                Don't have an account? <a th:href="@{/register}" style="font-weight:700;">Register as Student</a>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <script>
+        function fillCreds(email, pass) {
+            document.getElementById('username').value = email;
+            document.getElementById('password').value = pass;
+        }
+    </script>
+</body>
+</html>

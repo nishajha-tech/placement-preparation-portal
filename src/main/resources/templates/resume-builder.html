@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('ATS Resume Builder')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 28px; flex-wrap:wrap; gap:16px;">
+            <div>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">ATS-Friendly Resume Builder</h1>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Build a standardized 1-page engineering resume formatted for corporate Applicant Tracking Systems.</p>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <a th:href="@{/resume/download}" class="btn btn-primary btn-sm" target="_blank">
+                    📥 Download ATS PDF Resume
+                </a>
+                <button type="button" class="btn btn-outline btn-sm" onclick="window.print()">
+                    🖨️ Print / Save
+                </button>
+            </div>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}">Resume updated!</div>
+
+        <!-- 2-Column Builder & Live Preview Layout -->
+        <div style="display:grid; grid-template-columns:1.1fr 0.9fr; gap:28px; align-items:start;">
+            
+            <!-- Left: Resume Form Editor -->
+            <div class="card" style="padding:28px;">
+                <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:18px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">
+                    ✏️ Edit Resume Details
+                </h3>
+
+                <form th:action="@{/resume/save}" th:object="${resume}" method="post">
+                    <!-- Contact Section -->
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--primary); margin-bottom:10px;">1. Contact & Socials</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" th:field="*{fullName}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="text" th:field="*{phone}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Location (City, Country)</label>
+                            <input type="text" th:field="*{location}" class="form-control" placeholder="Bangalore, India">
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label class="form-label">LinkedIn Profile URL</label>
+                            <input type="text" th:field="*{linkedinUrl}" class="form-control" placeholder="linkedin.com/in/username">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">GitHub URL</label>
+                            <input type="text" th:field="*{githubUrl}" class="form-control" placeholder="github.com/username">
+                        </div>
+                    </div>
+
+                    <!-- Career Objective -->
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--primary); margin:16px 0 10px;">2. Professional Objective</div>
+                    <div class="form-group">
+                        <textarea th:field="*{summary}" class="form-control" placeholder="Brief 2-3 line career objective..."></textarea>
+                    </div>
+
+                    <!-- Education Details -->
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--primary); margin:16px 0 10px;">3. Higher Education</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label class="form-label">Degree & Branch</label>
+                            <input type="text" th:field="*{degree}" class="form-control" placeholder="B.Tech Computer Science">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">College / University</label>
+                            <input type="text" th:field="*{college}" class="form-control">
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                        <div class="form-group">
+                            <label class="form-label">CGPA</label>
+                            <input type="number" step="0.01" th:field="*{cgpa}" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Passing Year</label>
+                            <input type="number" th:field="*{passingYear}" class="form-control">
+                        </div>
+                    </div>
+
+                    <!-- Technical Skills -->
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--primary); margin:16px 0 10px;">4. Skills</div>
+                    <div class="form-group">
+                        <label class="form-label">Languages & Frameworks</label>
+                        <input type="text" th:field="*{technicalSkills}" class="form-control" placeholder="Java 21, Spring Boot, MySQL, REST APIs">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Databases & Developer Tools</label>
+                        <input type="text" th:field="*{toolsAndDatabases}" class="form-control" placeholder="MySQL, Git, GitHub, IntelliJ IDEA, Postman">
+                    </div>
+
+                    <!-- Projects -->
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--primary); margin:16px 0 10px;">5. Academic Projects</div>
+                    <div class="form-group">
+                        <label class="form-label">Project 1 Title & Tech Stack</label>
+                        <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:10px;">
+                            <input type="text" th:field="*{project1Title}" class="form-control" placeholder="Placement Preparation Portal">
+                            <input type="text" th:field="*{project1Tech}" class="form-control" placeholder="Java, Spring Boot, MySQL">
+                        </div>
+                        <textarea th:field="*{project1Desc}" class="form-control" style="margin-top:8px;" placeholder="Key features, engineering challenges solved..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Project 2 Title & Tech Stack</label>
+                        <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:10px;">
+                            <input type="text" th:field="*{project2Title}" class="form-control" placeholder="Smart Campus Management">
+                            <input type="text" th:field="*{project2Tech}" class="form-control" placeholder="Spring MVC, Hibernate">
+                        </div>
+                        <textarea th:field="*{project2Desc}" class="form-control" style="margin-top:8px;" placeholder="Project description..."></textarea>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div style="font-weight:700; font-size:0.9rem; color:var(--primary); margin:16px 0 10px;">6. Certifications & Achievements</div>
+                    <div class="form-group">
+                        <textarea th:field="*{certifications}" class="form-control" placeholder="Oracle Java Associate, Smart India Hackathon Finalist..."></textarea>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a th:href="@{/resume/download}" class="btn btn-success" target="_blank">Download PDF 📥</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right: Real-time Formatted Resume Preview Card -->
+            <div class="card" style="padding:32px; background:#ffffff; box-shadow:0 10px 25px rgba(0,0,0,0.08); border:1px solid #cbd5e1; position:sticky; top:90px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; padding-bottom:8px; border-bottom:1px solid #e2e8f0;">
+                    <span style="font-size:0.8rem; font-weight:700; color:#475569; text-transform:uppercase;">Live ATS Format Preview</span>
+                    <span class="badge badge-success">Single Page Standard</span>
+                </div>
+
+                <!-- ATS Document Simulated View -->
+                <div style="font-size:0.85rem; color:#1e293b; line-height:1.5;">
+                    <div style="text-align:center; margin-bottom:10px;">
+                        <h2 style="font-size:1.4rem; font-weight:800; color:#1e3a8a; text-transform:uppercase;" th:text="${resume.fullName}">Rahul Sharma</h2>
+                        <div style="font-size:0.75rem; color:#64748b; margin-top:2px;">
+                            <span th:text="${resume.email}">rahul@student.com</span> | 
+                            <span th:text="${resume.phone}">+91 9876543210</span> | 
+                            <span th:text="${resume.location}">Bangalore</span>
+                        </div>
+                    </div>
+
+                    <!-- Objective -->
+                    <div style="margin-bottom:10px;">
+                        <div style="font-weight:700; font-size:0.85rem; color:#1e3a8a; border-bottom:1px solid #cbd5e1; padding-bottom:2px; margin-bottom:4px;">PROFESSIONAL SUMMARY</div>
+                        <p style="font-size:0.8rem; color:#334155;" th:text="${resume.summary}">Engineering graduate with focus on Java systems.</p>
+                    </div>
+
+                    <!-- Education -->
+                    <div style="margin-bottom:10px;">
+                        <div style="font-weight:700; font-size:0.85rem; color:#1e3a8a; border-bottom:1px solid #cbd5e1; padding-bottom:2px; margin-bottom:4px;">EDUCATION</div>
+                        <div style="display:flex; justify-content:space-between;">
+                            <div>
+                                <strong th:text="${resume.degree} + ' in ' + ${resume.branch}">B.Tech in CSE</strong><br>
+                                <span style="font-size:0.75rem; color:#64748b;" th:text="${resume.college}">Institute of Technology</span>
+                            </div>
+                            <div style="text-align:right;">
+                                <div>CGPA: <strong th:text="${resume.cgpa}">8.4</strong></div>
+                                <div style="font-size:0.75rem; color:#64748b;" th:text="'Batch ' + ${resume.passingYear}">2026</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills -->
+                    <div style="margin-bottom:10px;">
+                        <div style="font-weight:700; font-size:0.85rem; color:#1e3a8a; border-bottom:1px solid #cbd5e1; padding-bottom:2px; margin-bottom:4px;">TECHNICAL SKILLS</div>
+                        <div style="font-size:0.8rem;">
+                            <strong>Languages & Core:</strong> <span th:text="${resume.technicalSkills}">Java 21, Spring Boot, MySQL</span><br>
+                            <strong>Tools & DB:</strong> <span th:text="${resume.toolsAndDatabases}">IntelliJ, Git, MySQL</span>
+                        </div>
+                    </div>
+
+                    <!-- Projects -->
+                    <div style="margin-bottom:10px;">
+                        <div style="font-weight:700; font-size:0.85rem; color:#1e3a8a; border-bottom:1px solid #cbd5e1; padding-bottom:2px; margin-bottom:4px;">PROJECTS</div>
+                        <div style="margin-bottom:6px;">
+                            <strong th:text="${resume.project1Title}">Placement Portal</strong> | <span style="font-size:0.75rem; color:#64748b;" th:text="${resume.project1Tech}">Spring Boot, MySQL</span>
+                            <div style="font-size:0.78rem; color:#475569;" th:text="'• ' + ${resume.project1Desc}">Description</div>
+                        </div>
+                        <div th:if="${resume.project2Title}">
+                            <strong th:text="${resume.project2Title}">Campus System</strong> | <span style="font-size:0.75rem; color:#64748b;" th:text="${resume.project2Tech}">Java</span>
+                            <div style="font-size:0.78rem; color:#475569;" th:text="'• ' + ${resume.project2Desc}">Description</div>
+                        </div>
+                    </div>
+
+                    <!-- Certifications -->
+                    <div th:if="${resume.certifications}">
+                        <div style="font-weight:700; font-size:0.85rem; color:#1e3a8a; border-bottom:1px solid #cbd5e1; padding-bottom:2px; margin-bottom:4px;">CERTIFICATIONS</div>
+                        <div style="font-size:0.78rem; color:#475569;" th:text="${resume.certifications}">Certifications</div>
+                    </div>
+                </div>
+
+                <div style="margin-top:20px; text-align:center;">
+                    <a th:href="@{/resume/download}" class="btn btn-primary btn-sm" style="width:100%;" target="_blank">
+                        📥 Download Official ATS PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

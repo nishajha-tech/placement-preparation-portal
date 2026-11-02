@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Test Instructions')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px; max-width:800px;">
+        <div class="card" style="padding:36px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+                <span class="badge badge-primary" th:text="${test.companyTag != null ? test.companyTag : 'General'}">TCS</span>
+                <span class="badge badge-warning" th:text="${test.difficulty}">MEDIUM</span>
+            </div>
+
+            <h1 style="font-size:1.85rem; font-weight:800; color:var(--text-primary); margin-bottom:10px;" th:text="${test.title}">
+                TCS NQT Full-Length Mock Test
+            </h1>
+            <p style="color:var(--text-secondary); font-size:0.95rem; margin-bottom:24px;" th:text="${test.description}">
+                Description here
+            </p>
+
+            <div style="background:#f1f5f9; padding:20px; border-radius:12px; margin-bottom:24px; display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; text-align:center;">
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Duration</div>
+                    <div style="font-size:1.4rem; font-weight:800; color:var(--text-primary);" th:text="${test.durationMinutes} + ' Mins'">20 Mins</div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Total Questions</div>
+                    <div style="font-size:1.4rem; font-weight:800; color:var(--text-primary);" th:text="${test.questions.size()}">10</div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Passing Marks</div>
+                    <div style="font-size:1.4rem; font-weight:800; color:var(--text-primary);" th:text="${test.passingMarks} + ' / ' + ${test.totalMarks}">6 / 10</div>
+                </div>
+            </div>
+
+            <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:12px; color:var(--text-primary);">Important Instructions & Exam Rules:</h3>
+            <ul style="color:var(--text-secondary); font-size:0.9rem; line-height:1.8; margin-left:20px; margin-bottom:28px;">
+                <li>The countdown timer starts as soon as you click the <strong>"Begin Test Now"</strong> button below.</li>
+                <li><strong>Automatic Submission:</strong> When the timer expires (00:00), your responses are automatically locked and graded.</li>
+                <li>Each correct response awards <strong>1 mark</strong>. No negative marking for incorrect or unattempted questions.</li>
+                <li>Use the <strong>Question Palette</strong> on the side to quickly jump between questions at any time.</li>
+                <li>You can flag challenging questions using the <strong>"Mark for Review"</strong> button and revisit them before final submission.</li>
+            </ul>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <a th:href="@{/mock-test}" class="btn btn-outline">← Back to Tests</a>
+                <a th:href="@{'/mock-test/' + ${test.id} + '/start'}" class="btn btn-primary btn-lg">
+                    Begin Test Now ⏱️
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

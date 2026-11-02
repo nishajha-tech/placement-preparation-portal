@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Test Assessment Scorecard')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px; max-width:900px;">
+        <!-- Scorecard Header Card -->
+        <div class="card" style="padding:36px; margin-bottom:32px; text-align:center; position:relative; overflow:hidden;">
+            <div style="display:inline-block; margin-bottom:12px;">
+                <span th:if="${attempt.status == 'PASSED'}" class="badge badge-success" style="font-size:0.95rem; padding:6px 16px;">
+                    🎉 ASSESSMENT PASSED
+                </span>
+                <span th:if="${attempt.status == 'FAILED'}" class="badge badge-danger" style="font-size:0.95rem; padding:6px 16px;">
+                    ⚠️ NEEDS IMPROVEMENT (FAILED)
+                </span>
+            </div>
+
+            <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary); margin-bottom:6px;" th:text="${test.title}">
+                TCS NQT Full-Length Mock Test
+            </h1>
+            <p style="color:var(--text-muted); font-size:0.9rem;" th:text="'Candidate: ' + ${student.fullName} + ' | Completed on ' + ${#temporals.format(attempt.attemptedAt, 'dd MMM yyyy, hh:mm a')}">
+                Candidate Details
+            </p>
+
+            <!-- Metrics Grid -->
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; margin-top:28px; background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #e2e8f0;">
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Score</div>
+                    <div style="font-size:1.6rem; font-weight:800; color:var(--primary);" th:text="${attempt.score} + ' / ' + ${attempt.totalQuestions}">8 / 10</div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Percentage</div>
+                    <div style="font-size:1.6rem; font-weight:800;" th:classappend="${attempt.percentage >= 60} ? 'text-success' : 'text-danger'" th:text="${attempt.percentage} + '%'">80%</div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Correct / Wrong</div>
+                    <div style="font-size:1.6rem; font-weight:800; color:#10b981;">
+                        <span th:text="${attempt.correctAnswers}">8</span> / <span style="color:#ef4444;" th:text="${attempt.wrongAnswers}">2</span>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); text-transform:uppercase; font-weight:700;">Time Taken</div>
+                    <div style="font-size:1.6rem; font-weight:800; color:var(--text-primary);" th:text="(${attempt.timeTakenSeconds} / 60) + 'm ' + (${attempt.timeTakenSeconds} % 60) + 's'">15m 20s</div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:12px; margin-top:24px;">
+                <a th:href="@{/mock-test}" class="btn btn-outline btn-sm">Take Another Mock Test</a>
+                <a th:href="@{/analytics}" class="btn btn-primary btn-sm">View Analytics Dashboard 📈</a>
+            </div>
+        </div>
+
+        <!-- Question Review Section -->
+        <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h3 style="font-size:1.35rem; font-weight:800; color:var(--text-primary);">Detailed Questions Review</h3>
+                <span class="badge badge-dark" th:text="${questions.size()} + ' Total Questions'">10 Total Questions</span>
+            </div>
+
+            <div th:each="q, iterStat : ${questions}" class="card" style="margin-bottom:20px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span class="badge badge-dark" th:text="'Question ' + ${iterStat.count}">Question 1</span>
+                        <span class="badge badge-primary" th:text="${q.category}">QUANTITATIVE</span>
+                        <span th:if="${q.topic}" class="badge" style="background:#f1f5f9; color:#475569;" th:text="${q.topic}">Topic</span>
+                    </div>
+                    <span class="badge badge-success" th:text="'Correct Key: Option ' + ${q.correctOption}">Correct: B</span>
+                </div>
+
+                <div style="font-size:1.05rem; font-weight:600; margin-bottom:16px; line-height:1.6;" th:text="${q.questionText}">
+                    Question text
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; font-size:0.9rem;">
+                    <div style="padding:10px 14px; border-radius:8px; border:1px solid #e2e8f0;"
+                         th:styleappend="${q.correctOption == 'A'} ? 'background:#ecfdf5; border-color:#a7f3d0; font-weight:600; color:#065f46;' : ''">
+                        <strong>A.</strong> <span th:text="${q.optionA}">Option A</span>
+                    </div>
+                    <div style="padding:10px 14px; border-radius:8px; border:1px solid #e2e8f0;"
+                         th:styleappend="${q.correctOption == 'B'} ? 'background:#ecfdf5; border-color:#a7f3d0; font-weight:600; color:#065f46;' : ''">
+                        <strong>B.</strong> <span th:text="${q.optionB}">Option B</span>
+                    </div>
+                    <div style="padding:10px 14px; border-radius:8px; border:1px solid #e2e8f0;"
+                         th:styleappend="${q.correctOption == 'C'} ? 'background:#ecfdf5; border-color:#a7f3d0; font-weight:600; color:#065f46;' : ''">
+                        <strong>C.</strong> <span th:text="${q.optionC}">Option C</span>
+                    </div>
+                    <div style="padding:10px 14px; border-radius:8px; border:1px solid #e2e8f0;"
+                         th:styleappend="${q.correctOption == 'D'} ? 'background:#ecfdf5; border-color:#a7f3d0; font-weight:600; color:#065f46;' : ''">
+                        <strong>D.</strong> <span th:text="${q.optionD}">Option D</span>
+                    </div>
+                </div>
+
+                <!-- Explanation Box -->
+                <div style="background:#f0fdf4; padding:14px 18px; border-radius:8px; border:1px solid #bbf7d0;">
+                    <div style="font-size:0.85rem; font-weight:700; color:#15803d; margin-bottom:4px;">💡 Step-by-Step Logic & Formula:</div>
+                    <div style="font-size:0.9rem; color:#1e293b; line-height:1.6;" th:text="${q.explanation}">
+                        Full explanation
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

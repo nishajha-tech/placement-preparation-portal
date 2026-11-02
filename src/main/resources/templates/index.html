@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Home')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div>
+                <div class="hero-badge">
+                    <span>⚡ Campus Drive Ready 2026</span>
+                </div>
+                <h1 class="hero-title">
+                    Master Placements with <span class="gradient-text">Precision & Practice</span>
+                </h1>
+                <p class="hero-subtitle">
+                    The all-in-one preparation ecosystem for college engineering students. Master aptitude, practice timed mock assessments, solve DSA challenges in Java, build an ATS resume, and check eligibility for top tech recruiters.
+                </p>
+                <div class="hero-actions">
+                    <a th:href="@{/login}" class="btn btn-primary btn-lg">Explore Student Portal</a>
+                    <a th:href="@{/register}" class="btn btn-secondary btn-lg">Create Free Account</a>
+                </div>
+            </div>
+
+            <!-- Demo Credentials Quick Card -->
+            <div class="glass-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <span style="font-size:0.8rem; font-weight:700; color:#38bdf8; text-transform:uppercase; letter-spacing:0.05em;">College Viva Demo Accounts</span>
+                    <span class="badge badge-primary">Instant Access</span>
+                </div>
+                <h3 style="font-size:1.25rem; font-weight:700; color:#ffffff; margin-bottom:14px;">Pre-loaded Credentials:</h3>
+                
+                <div style="background:rgba(15, 23, 42, 0.6); padding:14px; border-radius:10px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08);">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <strong style="color:#a5b4fc; font-size:0.92rem;">Student (Rahul Sharma - High CGPA)</strong>
+                        <span class="badge badge-success">8.4 CGPA</span>
+                    </div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.84rem; color:#cbd5e1;">Email: rahul@student.com</div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.84rem; color:#cbd5e1;">Pass: student123</div>
+                </div>
+
+                <div style="background:rgba(15, 23, 42, 0.6); padding:14px; border-radius:10px; margin-bottom:12px; border:1px solid rgba(255,255,255,0.08);">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <strong style="color:#fcd34d; font-size:0.92rem;">Student (Sneha - 1 Backlog)</strong>
+                        <span class="badge badge-warning">1 Backlog</span>
+                    </div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.84rem; color:#cbd5e1;">Email: sneha@student.com</div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.84rem; color:#cbd5e1;">Pass: student123</div>
+                </div>
+
+                <div style="background:rgba(15, 23, 42, 0.6); padding:14px; border-radius:10px; margin-bottom:18px; border:1px solid rgba(255,255,255,0.08);">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                        <strong style="color:#f472b6; font-size:0.92rem;">Administrator (TPO Head)</strong>
+                        <span class="badge badge-dark">Admin</span>
+                    </div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.84rem; color:#cbd5e1;">Email: admin@portal.com</div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.84rem; color:#cbd5e1;">Pass: admin123</div>
+                </div>
+
+                <a th:href="@{/login}" class="btn btn-primary" style="width:100%;">Sign In with Demo Account →</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key Modules Overview -->
+    <section style="padding: 70px 0;">
+        <div class="container">
+            <div style="text-align:center; max-width:640px; margin:0 auto 50px;">
+                <span class="badge badge-primary" style="margin-bottom:10px;">Full-Stack Architecture</span>
+                <h2 style="font-size:2.2rem; font-weight:800; color:var(--text-primary); margin-bottom:12px;">Everything Needed to Get Placed</h2>
+                <p style="color:var(--text-muted); font-size:1rem;">Constructed strictly using Java 21, Spring Boot 3, Spring Data JPA, and MySQL with full backend functionality.</p>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+                <!-- Feature 1 -->
+                <div class="card">
+                    <div style="font-size:2.2rem; margin-bottom:14px;">🧠</div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">Aptitude Practice Bank</h3>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">
+                        Practice Quantitative, Logical Reasoning, Verbal Ability, and Technical MCQs with instant step-by-step formula explanations and difficulty levels.
+                    </p>
+                </div>
+
+                <!-- Feature 2 -->
+                <div class="card">
+                    <div style="font-size:2.2rem; margin-bottom:14px;">⏱️</div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">Timed Mock Tests</h3>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">
+                        Simulates TCS NQT, Infosys, and Wipro test environments with live countdown timer, interactive question palette, auto-submit on timeout, and detailed score review.
+                    </p>
+                </div>
+
+                <!-- Feature 3 -->
+                <div class="card">
+                    <div style="font-size:2.2rem; margin-bottom:14px;">💻</div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">Java Coding Sandbox</h3>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">
+                        Code popular college placement DSA problems (Two Sum, Palindrome, Reverse String) with safe compiler test-case verification and complexity analysis.
+                    </p>
+                </div>
+
+                <!-- Feature 4 -->
+                <div class="card">
+                    <div style="font-size:2.2rem; margin-bottom:14px;">📄</div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">ATS Resume Builder</h3>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">
+                        Build a professional 1-page ATS-compliant resume with live form preview and instant OpenPDF high-resolution downloadable PDF document.
+                    </p>
+                </div>
+
+                <!-- Feature 5 -->
+                <div class="card">
+                    <div style="font-size:2.2rem; margin-bottom:14px;">🎯</div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">Placement Eligibility Checker</h3>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">
+                        Real-time rule engine that matches your CGPA, 10th%, 12th%, and active backlogs against top companies with an interactive "What-If" simulator!
+                    </p>
+                </div>
+
+                <!-- Feature 6 -->
+                <div class="card">
+                    <div style="font-size:2.2rem; margin-bottom:14px;">📈</div>
+                    <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:8px;">Chart.js Progress Analytics</h3>
+                    <p style="color:var(--text-secondary); font-size:0.9rem; line-height:1.6;">
+                        Visual charts illustrating Category Accuracy Radar, Mock Test Progression Line, Coding Solved Breakdown, and Overall Placement Readiness Score (0-100%).
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Recruiter Criteria Showcase -->
+    <section style="background:#ffffff; padding:70px 0; border-top:1px solid var(--border-color); border-bottom:1px solid var(--border-color);">
+        <div class="container">
+            <div style="text-align:center; max-width:640px; margin:0 auto 40px;">
+                <span class="badge badge-success" style="margin-bottom:10px;">Campus Partners</span>
+                <h2 style="font-size:2rem; font-weight:800; color:var(--text-primary); margin-bottom:8px;">Top Hiring Companies</h2>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Pre-configured recruiter criteria with packages and requirements.</p>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(260px, 1fr)); gap:20px;">
+                <div class="card" th:each="c : ${companies}" style="display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:10px;">
+                            <h4 style="font-size:1.1rem; font-weight:700;" th:text="${c.companyName}">Company</h4>
+                            <span class="badge badge-primary" th:text="${c.packageLpa} + ' LPA'">7.5 LPA</span>
+                        </div>
+                        <div style="font-size:0.85rem; color:var(--text-secondary); font-weight:600; margin-bottom:12px;" th:text="${c.roleName}">Software Engineer</div>
+                        <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:6px;">
+                            • Min CGPA: <strong th:text="${c.minCgpa}">7.0</strong>
+                        </div>
+                        <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:6px;">
+                            • 10th / 12th: <strong th:text="${c.minTenthPercentage} + '% / ' + ${c.minTwelfthPercentage} + '%'">60% / 60%</strong>
+                        </div>
+                        <div style="font-size:0.82rem; color:var(--text-muted); margin-bottom:12px;">
+                            • Max Backlogs: <strong th:text="${c.maxBacklogs}">0</strong>
+                        </div>
+                    </div>
+                    <a th:href="@{/eligibility}" class="btn btn-outline btn-sm" style="width:100%; text-align:center;">Check My Eligibility →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

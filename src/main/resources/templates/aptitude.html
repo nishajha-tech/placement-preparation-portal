@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Aptitude Practice Hub')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                <div>
+                    <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Aptitude Practice Bank</h1>
+                    <p style="color:var(--text-muted); font-size:0.95rem;">Select your category and test your preparation with instant answer validation and explanations.</p>
+                </div>
+                <div class="badge badge-primary" style="font-size:0.85rem; padding:8px 14px;">
+                    Bank Size: <strong th:text="${totalQuestions}" style="margin-left:4px;">20</strong> Questions
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Bar with Category Tabs and Difficulty -->
+        <div class="filter-bar">
+            <div class="nav-tabs">
+                <a th:href="@{/aptitude(category='QUANTITATIVE', difficulty=${selectedDifficulty})}"
+                   class="tab-link" th:classappend="${selectedCategory == 'QUANTITATIVE'} ? 'active' : ''">
+                    📊 Quantitative
+                </a>
+                <a th:href="@{/aptitude(category='LOGICAL', difficulty=${selectedDifficulty})}"
+                   class="tab-link" th:classappend="${selectedCategory == 'LOGICAL'} ? 'active' : ''">
+                    🧩 Logical Reasoning
+                </a>
+                <a th:href="@{/aptitude(category='VERBAL', difficulty=${selectedDifficulty})}"
+                   class="tab-link" th:classappend="${selectedCategory == 'VERBAL'} ? 'active' : ''">
+                    📖 Verbal Ability
+                </a>
+                <a th:href="@{/aptitude(category='TECHNICAL', difficulty=${selectedDifficulty})}"
+                   class="tab-link" th:classappend="${selectedCategory == 'TECHNICAL'} ? 'active' : ''">
+                    💻 Technical & Java
+                </a>
+                <a th:href="@{/aptitude(category='ALL', difficulty=${selectedDifficulty})}"
+                   class="tab-link" th:classappend="${selectedCategory == 'ALL'} ? 'active' : ''">
+                    🌐 All Topics
+                </a>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <label style="font-size:0.85rem; font-weight:600; color:var(--text-secondary);">Difficulty:</label>
+                <select onchange="window.location.href=this.value" class="form-control" style="width:auto; padding:6px 12px; font-size:0.85rem;">
+                    <option th:value="@{/aptitude(category=${selectedCategory}, difficulty='ALL')}" th:selected="${selectedDifficulty == 'ALL'}">All Levels</option>
+                    <option th:value="@{/aptitude(category=${selectedCategory}, difficulty='EASY')}" th:selected="${selectedDifficulty == 'EASY'}">Easy</option>
+                    <option th:value="@{/aptitude(category=${selectedCategory}, difficulty='MEDIUM')}" th:selected="${selectedDifficulty == 'MEDIUM'}">Medium</option>
+                    <option th:value="@{/aptitude(category=${selectedCategory}, difficulty='HARD')}" th:selected="${selectedDifficulty == 'HARD'}">Hard</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Questions List -->
+        <div th:if="${#lists.isEmpty(questions)}" style="text-align:center; padding:60px 20px; background:#fff; border-radius:12px; border:1px solid #e2e8f0;">
+            <div style="font-size:2.5rem; margin-bottom:12px;">🔍</div>
+            <h3 style="font-size:1.2rem; font-weight:700;">No questions found for this filter</h3>
+            <p style="color:var(--text-muted); font-size:0.9rem; margin-top:4px;">Try selecting "All Topics" or a different difficulty level.</p>
+            <a th:href="@{/aptitude(category='ALL', difficulty='ALL')}" class="btn btn-outline btn-sm" style="margin-top:16px;">Reset Filters</a>
+        </div>
+
+        <div th:each="q, iterStat : ${questions}" class="question-card" th:attr="data-question-id=${q.id}">
+            <div class="question-header">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="badge badge-dark" th:text="'Q' + ${iterStat.count}">Q1</span>
+                    <span class="badge badge-primary" th:text="${q.category}">QUANTITATIVE</span>
+                    <span th:if="${q.topic}" class="badge" style="background:#f1f5f9; color:#475569;" th:text="${q.topic}">Time & Work</span>
+                </div>
+                <div>
+                    <span th:if="${q.difficulty == 'EASY'}" class="badge badge-success">EASY</span>
+                    <span th:if="${q.difficulty == 'MEDIUM'}" class="badge badge-warning">MEDIUM</span>
+                    <span th:if="${q.difficulty == 'HARD'}" class="badge badge-danger">HARD</span>
+                </div>
+            </div>
+
+            <div class="question-title" th:text="${q.questionText}">
+                Question statement goes here...
+            </div>
+
+            <div class="options-grid">
+                <label class="option-label" data-opt="A">
+                    <input type="radio" th:name="'opt_' + ${q.id}" value="A">
+                    <span><strong>A.</strong> <span th:text="${q.optionA}">Option A</span></span>
+                </label>
+                <label class="option-label" data-opt="B">
+                    <input type="radio" th:name="'opt_' + ${q.id}" value="B">
+                    <span><strong>B.</strong> <span th:text="${q.optionB}">Option B</span></span>
+                </label>
+                <label class="option-label" data-opt="C">
+                    <input type="radio" th:name="'opt_' + ${q.id}" value="C">
+                    <span><strong>C.</strong> <span th:text="${q.optionC}">Option C</span></span>
+                </label>
+                <label class="option-label" data-opt="D">
+                    <input type="radio" th:name="'opt_' + ${q.id}" value="D">
+                    <span><strong>D.</strong> <span th:text="${q.optionD}">Option D</span></span>
+                </label>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <button type="button" class="btn btn-primary btn-sm btn-check-answer">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <!-- Step-by-Step Explanation Container -->
+            <div class="explanation-box">
+                <div class="explanation-title">
+                    <span>💡 Step-by-Step Solution & Explanation:</span>
+                </div>
+                <p style="font-size:0.92rem; color:#1e293b; line-height:1.6;" th:text="${q.explanation}">
+                    Detailed mathematical solution and formula breakdown.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Timed Mock Tests')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px;">
+            <div>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Placement Mock Assessments</h1>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Simulate real company hiring rounds with strict countdown timers and automatic submission.</p>
+            </div>
+            <a th:href="@{/mock-test/history}" class="btn btn-outline btn-sm">View My Test History 📜</a>
+        </div>
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:24px;">
+            <div th:each="t : ${mockTests}" class="card" style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <span class="badge badge-primary" th:text="${t.companyTag != null ? t.companyTag : 'General'}">TCS</span>
+                        <span th:if="${t.difficulty == 'EASY'}" class="badge badge-success">EASY</span>
+                        <span th:if="${t.difficulty == 'MEDIUM'}" class="badge badge-warning">MEDIUM</span>
+                        <span th:if="${t.difficulty == 'HARD'}" class="badge badge-danger">HARD</span>
+                    </div>
+
+                    <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:10px; color:var(--text-primary);" th:text="${t.title}">
+                        TCS NQT Full-Length Mock Test
+                    </h3>
+
+                    <p style="color:var(--text-secondary); font-size:0.88rem; line-height:1.6; margin-bottom:18px;" th:text="${t.description}">
+                        Comprehensive simulation conforming to TCS National Qualifier Test pattern.
+                    </p>
+
+                    <div style="background:#f8fafc; padding:12px 16px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px; display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.85rem;">
+                        <div>⏱️ Duration: <strong th:text="${t.durationMinutes} + ' Mins'">20 Mins</strong></div>
+                        <div>❓ Questions: <strong th:text="${t.questions.size()}">10</strong></div>
+                        <div>🎯 Total Marks: <strong th:text="${t.totalMarks}">10</strong></div>
+                        <div>✅ Pass Marks: <strong th:text="${t.passingMarks}">6</strong></div>
+                    </div>
+                </div>
+
+                <div>
+                    <a th:href="@{'/mock-test/' + ${t.id} + '/instructions'}" class="btn btn-primary" style="width:100%; text-align:center;">
+                        Start Mock Test →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

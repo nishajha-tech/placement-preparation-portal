@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('My Test History')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Mock Test Performance History</h1>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Track all previous mock test attempts, sectional accuracy, and review previous mistakes.</p>
+            </div>
+            <a th:href="@{/mock-test}" class="btn btn-primary btn-sm">Take New Mock Test 🚀</a>
+        </div>
+
+        <div class="card">
+            <div th:if="${#lists.isEmpty(attempts)}" style="text-align:center; padding:50px 20px; color:var(--text-muted);">
+                <div style="font-size:2.5rem; margin-bottom:12px;">📝</div>
+                <h3 style="font-size:1.2rem; font-weight:700;">No test attempts on record</h3>
+                <p style="margin-top:6px; font-size:0.9rem;">Start with our company-specific mock tests to evaluate your campus readiness.</p>
+                <a th:href="@{/mock-test}" class="btn btn-primary btn-sm" style="margin-top:16px;">Browse Mock Tests</a>
+            </div>
+
+            <div th:unless="${#lists.isEmpty(attempts)}" class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Mock Test Name</th>
+                            <th>Date & Time</th>
+                            <th>Score</th>
+                            <th>Percentage</th>
+                            <th>Time Taken</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="att, iterStat : ${attempts}">
+                            <td th:text="${iterStat.count}">1</td>
+                            <td>
+                                <strong th:text="${att.mockTest.title}">TCS NQT Full Mock</strong>
+                                <span class="badge badge-primary" style="margin-left:6px;" th:text="${att.mockTest.companyTag != null ? att.mockTest.companyTag : 'General'}">TCS</span>
+                            </td>
+                            <td th:text="${#temporals.format(att.attemptedAt, 'dd MMM yyyy, hh:mm a')}">Date</td>
+                            <td>
+                                <strong th:text="${att.score}">8</strong> / <span th:text="${att.totalQuestions}">10</span>
+                            </td>
+                            <td>
+                                <strong th:text="${att.percentage} + '%'" th:style="${att.percentage >= 60} ? 'color:#10b981;' : 'color:#ef4444;'">80%</strong>
+                            </td>
+                            <td th:text="(${att.timeTakenSeconds} / 60) + 'm ' + (${att.timeTakenSeconds} % 60) + 's'">14m 20s</td>
+                            <td>
+                                <span th:if="${att.status == 'PASSED'}" class="badge badge-success">PASSED</span>
+                                <span th:if="${att.status == 'FAILED'}" class="badge badge-danger">FAILED</span>
+                            </td>
+                            <td>
+                                <a th:href="@{'/mock-test/attempt/' + ${att.id} + '/result'}" class="btn btn-outline btn-sm">Review Answers</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

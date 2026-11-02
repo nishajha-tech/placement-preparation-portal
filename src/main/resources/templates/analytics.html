@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Progress Analytics')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px;">
+            <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Preparation Progress Analytics</h1>
+            <p style="color:var(--text-muted); font-size:0.95rem;">Interactive visual diagnostics powered by Chart.js measuring aptitude accuracy, mock test score trends, and coding mastery.</p>
+        </div>
+
+        <!-- Performance Insights Banner -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-bottom:32px;">
+            <div class="card" style="border-left:5px solid #10b981;">
+                <div style="font-size:0.8rem; font-weight:700; color:#059669; text-transform:uppercase; margin-bottom:4px;">💪 Strongest Domain</div>
+                <div style="font-size:1.15rem; font-weight:800; color:var(--text-primary);" th:text="${insights.strongArea}">Quantitative Aptitude (85%)</div>
+                <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Highest historical accuracy recorded in practice.</div>
+            </div>
+
+            <div class="card" style="border-left:5px solid #ef4444;">
+                <div style="font-size:0.8rem; font-weight:700; color:#dc2626; text-transform:uppercase; margin-bottom:4px;">🎯 Needs Focus</div>
+                <div style="font-size:1.15rem; font-weight:800; color:var(--text-primary);" th:text="${insights.weakArea}">Verbal Ability (60%)</div>
+                <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Target this section to increase campus placement cut-offs.</div>
+            </div>
+
+            <div class="card" style="border-left:5px solid #4f46e5;">
+                <div style="font-size:0.8rem; font-weight:700; color:var(--primary); text-transform:uppercase; margin-bottom:4px;">💡 AI Recommendation</div>
+                <div style="font-size:1.05rem; font-weight:700; color:var(--text-primary);" th:text="${insights.nextStep}">Take a Verbal Mock Test</div>
+                <div style="font-size:0.82rem; color:var(--text-muted); margin-top:4px;">Completing this unlocks enhanced placement readiness.</div>
+            </div>
+        </div>
+
+        <!-- Charts Grid 2x2 -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:28px; margin-bottom:32px;">
+            
+            <!-- Chart 1: Category Accuracy Bar/Radar Chart -->
+            <div class="card" style="padding:28px;">
+                <div class="card-header">
+                    <h3 class="card-title">Category-wise Aptitude Accuracy (%)</h3>
+                    <span class="badge badge-primary">Accuracy</span>
+                </div>
+                <div style="height:280px; position:relative;">
+                    <canvas id="categoryAccuracyChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 2: Mock Test Progression Line Chart -->
+            <div class="card" style="padding:28px;">
+                <div class="card-header">
+                    <h3 class="card-title">Mock Test Score Progression (%)</h3>
+                    <span class="badge badge-success">Trend</span>
+                </div>
+                <div style="height:280px; position:relative;">
+                    <canvas id="mockTestHistoryChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 3: Coding Problems Solved by Difficulty -->
+            <div class="card" style="padding:28px;">
+                <div class="card-header">
+                    <h3 class="card-title">Coding Problems Solved by Difficulty</h3>
+                    <span class="badge badge-warning">DSA Breakdown</span>
+                </div>
+                <div style="height:280px; position:relative; display:flex; align-items:center; justify-content:center;">
+                    <canvas id="codingDistributionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Chart 4: Overall Placement Readiness Gauge -->
+            <div class="card" style="padding:28px;">
+                <div class="card-header">
+                    <h3 class="card-title">Placement Readiness Index</h3>
+                    <span class="badge badge-primary">Composite Score</span>
+                </div>
+                <div style="height:240px; position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <canvas id="readinessGaugeChart" style="max-height:200px;"></canvas>
+                    <div style="font-size:1.5rem; font-weight:800; color:var(--primary); margin-top:-30px;" th:text="${readinessScore} + ' / 100'">
+                        82 / 100
+                    </div>
+                </div>
+                <div style="text-align:center; font-size:0.85rem; color:var(--text-muted); margin-top:8px;">
+                    Calculated from Academics (CGPA & Backlogs), Mock Test Scores, Aptitude Accuracy, and DSA Solved.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+
+    <!-- Chart.js Initialization Scripts with Server-Rendered JSON -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        const categoryData = /*[[${categoryAccuracy}]]*/ { "QUANTITATIVE": 85.0, "LOGICAL": 75.0, "VERBAL": 65.0, "TECHNICAL": 80.0 };
+        const testLabels = /*[[${testHistoryLabels}]]*/ ["Diagnostic", "Test 1", "TCS Mock"];
+        const testScores = /*[[${testHistoryScores}]]*/ [65.0, 75.0, 80.0];
+        const codingDist = /*[[${codingDist}]]*/ { "Easy": 4, "Medium": 2, "Hard": 1 };
+        const readinessScore = /*[[${readinessScore}]]*/ 82;
+
+        // Chart 1: Category Accuracy Bar Chart
+        const ctx1 = document.getElementById('categoryAccuracyChart');
+        if (ctx1) {
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        label: 'Accuracy (%)',
+                        data: Object.values(categoryData),
+                        backgroundColor: [
+                            'rgba(79, 70, 229, 0.8)',
+                            'rgba(6, 182, 212, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(16, 185, 129, 0.8)'
+                        ],
+                        borderRadius: 8,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    },
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Chart 2: Mock Test Progression Line Chart
+        const ctx2 = document.getElementById('mockTestHistoryChart');
+        if (ctx2) {
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: testLabels,
+                    datasets: [{
+                        label: 'Score (%)',
+                        data: testScores,
+                        borderColor: '#4f46e5',
+                        backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: '#4f46e5',
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100 }
+                    }
+                }
+            });
+        }
+
+        // Chart 3: Coding Solved Doughnut Chart
+        const ctx3 = document.getElementById('codingDistributionChart');
+        if (ctx3) {
+            new Chart(ctx3, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(codingDist),
+                    datasets: [{
+                        data: Object.values(codingDist),
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+        }
+
+        // Chart 4: Readiness Gauge Semi-Doughnut
+        const ctx4 = document.getElementById('readinessGaugeChart');
+        if (ctx4) {
+            new Chart(ctx4, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Readiness', 'Remaining'],
+                    datasets: [{
+                        data: [readinessScore, 100 - readinessScore],
+                        backgroundColor: ['#4f46e5', '#e2e8f0'],
+                        circumference: 180,
+                        rotation: -90,
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+        }
+        /*]]>*/
+    </script>
+</body>
+</html>

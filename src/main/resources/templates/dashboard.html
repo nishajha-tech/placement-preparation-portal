@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Student Dashboard')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <!-- Welcome Banner -->
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 28px; flex-wrap:wrap; gap:16px;">
+            <div>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary); letter-spacing:-0.02em;">
+                    Welcome back, <span th:text="${student.fullName}">Rahul</span>! 👋
+                </h1>
+                <p style="color:var(--text-muted); font-size:0.95rem; margin-top:4px;">
+                    <span th:text="${student.degree} + ' in ' + ${student.branch}">B.Tech in CSE</span> • 
+                    <span th:text="${student.college}">Institute of Technology</span> • 
+                    <span th:text="'Batch ' + ${student.passingYear}">Batch 2026</span>
+                </p>
+            </div>
+            <div style="display:flex; gap:10px;">
+                <a th:href="@{/profile}" class="btn btn-outline btn-sm">Edit Profile</a>
+                <a th:href="@{/mock-test}" class="btn btn-primary btn-sm">Take a Mock Test 🚀</a>
+            </div>
+        </div>
+
+        <!-- Overall Placement Readiness Banner -->
+        <div class="readiness-card" th:style="'--readiness-deg: ' + (${readinessScore} * 3.6) + 'deg;'">
+            <div class="readiness-info">
+                <span class="badge" style="background:rgba(255,255,255,0.2); color:#fff; margin-bottom:8px;">AI Readiness Diagnostic</span>
+                <h3 th:text="'Your Placement Readiness Score is ' + ${readinessScore} + '%'">Your Placement Readiness Score is 82%</h3>
+                <p th:text="${insights.strongArea} + ' | ' + ${insights.nextStep}">
+                    Strong Area: Quantitative Aptitude | Recommended: Take a timed mock test to boost overall readiness!
+                </p>
+            </div>
+            <div class="readiness-circle">
+                <div class="readiness-val" th:text="${readinessScore} + '%'">82%</div>
+            </div>
+        </div>
+
+        <!-- Stat Cards Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon primary">⏱️</div>
+                <div>
+                    <div class="stat-value" th:text="${testsAttempted}">3</div>
+                    <div class="stat-label">Tests Attempted</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon success">🎯</div>
+                <div>
+                    <div class="stat-value" th:text="${averageScore} + '%'">78.5%</div>
+                    <div class="stat-label">Average Test Score</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon warning">🧠</div>
+                <div>
+                    <div class="stat-value" th:text="${practiceCount}">18</div>
+                    <div class="stat-label">Aptitude Solved</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon secondary">💻</div>
+                <div>
+                    <div class="stat-value" th:text="${codingSolvedCount}">4</div>
+                    <div class="stat-label">DSA Code Solved</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon primary">🏢</div>
+                <div>
+                    <div class="stat-value" th:text="${eligibleCompaniesCount}">6</div>
+                    <div class="stat-label">Eligible Companies</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions Grid -->
+        <div style="margin-bottom: 36px;">
+            <h3 style="font-size:1.25rem; font-weight:700; margin-bottom:16px;">Quick Preparation Modules</h3>
+            <div class="actions-grid">
+                <a th:href="@{/aptitude}" class="action-card">
+                    <span class="icon">🧠</span>
+                    <span class="title">Aptitude Practice</span>
+                    <span class="desc">Quant, Reasoning, Verbal & Tech MCQs with solutions</span>
+                </a>
+
+                <a th:href="@{/mock-test}" class="action-card">
+                    <span class="icon">⏱️</span>
+                    <span class="title">Timed Mock Tests</span>
+                    <span class="desc">TCS, Infosys & Wipro full-length simulations</span>
+                </a>
+
+                <a th:href="@{/coding}" class="action-card">
+                    <span class="icon">💻</span>
+                    <span class="title">Java Coding Sandbox</span>
+                    <span class="desc">Solve placement DSA questions with test cases</span>
+                </a>
+
+                <a th:href="@{/eligibility}" class="action-card">
+                    <span class="icon">🎯</span>
+                    <span class="title">Eligibility Checker</span>
+                    <span class="desc">Match CGPA, 10th, 12th & backlogs with companies</span>
+                </a>
+
+                <a th:href="@{/resume}" class="action-card">
+                    <span class="icon">📄</span>
+                    <span class="title">Resume Builder</span>
+                    <span class="desc">Live preview and instant ATS-compliant PDF export</span>
+                </a>
+
+                <a th:href="@{/analytics}" class="action-card">
+                    <span class="icon">📈</span>
+                    <span class="title">Chart Analytics</span>
+                    <span class="desc">Accuracy radar, score progression & insights</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Recent Attempts & Recommended Companies 2-column layout -->
+        <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:24px; align-items:start;">
+            
+            <!-- Recent Mock Tests -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Recent Mock Test Attempts</h3>
+                    <a th:href="@{/mock-test/history}" style="font-size:0.85rem; font-weight:600;">View All →</a>
+                </div>
+
+                <div th:if="${#lists.isEmpty(recentAttempts)}" style="text-align:center; padding:32px; color:var(--text-muted);">
+                    <div style="font-size:2rem; margin-bottom:8px;">📝</div>
+                    <p>No tests taken yet. Ready to assess your skills?</p>
+                    <a th:href="@{/mock-test}" class="btn btn-primary btn-sm" style="margin-top:12px;">Start First Test</a>
+                </div>
+
+                <div th:unless="${#lists.isEmpty(recentAttempts)}" class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Test Title</th>
+                                <th>Score</th>
+                                <th>Percentage</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="att : ${recentAttempts}">
+                                <td>
+                                    <strong th:text="${att.mockTest.title}">TCS NQT Mock</strong>
+                                    <div style="font-size:0.75rem; color:var(--text-muted);" th:text="${#temporals.format(att.attemptedAt, 'dd MMM yyyy, hh:mm a')}">Date</div>
+                                </td>
+                                <td th:text="${att.score} + ' / ' + ${att.totalQuestions}">8 / 10</td>
+                                <td th:text="${att.percentage} + '%'">80%</td>
+                                <td>
+                                    <span th:if="${att.status == 'PASSED'}" class="badge badge-success">PASSED</span>
+                                    <span th:if="${att.status == 'FAILED'}" class="badge badge-danger">FAILED</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{'/mock-test/attempt/' + ${att.id} + '/result'}" class="btn btn-outline btn-sm">Review</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Recommended Drives -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Eligible Recruiter Drives</h3>
+                    <a th:href="@{/eligibility}" style="font-size:0.85rem; font-weight:600;">All Criteria →</a>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:14px;">
+                    <div th:each="c, iterStat : ${companies}" th:if="${iterStat.index < 4}" style="padding:14px; background:#f8fafc; border-radius:10px; border:1px solid #e2e8f0; display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <div style="font-weight:700; font-size:0.95rem;" th:text="${c.companyName}">Company</div>
+                            <div style="font-size:0.82rem; color:var(--text-secondary);" th:text="${c.roleName}">Software Engineer</div>
+                            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:2px;">
+                                Min CGPA: <strong th:text="${c.minCgpa}">6.5</strong> | Max Backlogs: <strong th:text="${c.maxBacklogs}">1</strong>
+                            </div>
+                        </div>
+                        <div style="text-align:right;">
+                            <span class="badge badge-primary" th:text="${c.packageLpa} + ' LPA'">7.2 LPA</span>
+                            <div style="margin-top:6px;">
+                                <a th:href="@{/eligibility}" style="font-size:0.78rem; font-weight:600;">Verify →</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

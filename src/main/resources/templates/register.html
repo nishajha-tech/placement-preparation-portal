@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Student Registration')}"></head>
+<body style="background: radial-gradient(circle at top, #1e1b4b 0%, #0f172a 100%); min-height: 100vh; display:flex; flex-direction:column;">
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <div style="flex:1; display:flex; align-items:center; justify-content:center; padding: 40px 20px;">
+        <div class="card" style="width: 100%; max-width: 680px; box-shadow: 0 20px 40px rgba(0,0,0,0.4); background:#ffffff;">
+            <div style="text-align:center; margin-bottom: 24px;">
+                <span class="badge badge-primary" style="margin-bottom:8px;">New Student</span>
+                <h2 style="font-size:1.75rem; font-weight:800; color:var(--text-primary);">Create Your Account</h2>
+                <p style="color:var(--text-muted); font-size:0.9rem;">Fill in your academic profile to unlock automated placement eligibility checking</p>
+            </div>
+
+            <!-- Error message if registration failed -->
+            <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}">Error</div>
+
+            <form th:action="@{/register}" th:object="${user}" method="post">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control" placeholder="e.g. Amit Kumar" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">College Email *</label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="amit@student.com" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password *</label>
+                        <input type="password" id="password" th:field="*{password}" class="form-control" placeholder="••••••••" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" th:field="*{phone}" class="form-control" placeholder="+91 9876543210">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1.2fr 0.8fr; gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="college">College / University Name</label>
+                        <input type="text" id="college" th:field="*{college}" class="form-control" placeholder="Institute of Technology" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="degree">Degree</label>
+                        <select id="degree" th:field="*{degree}" class="form-control">
+                            <option value="B.Tech">B.Tech</option>
+                            <option value="B.E.">B.E.</option>
+                            <option value="MCA">MCA</option>
+                            <option value="BCA">BCA</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="branch">Branch / Specialization</label>
+                        <select id="branch" th:field="*{branch}" class="form-control">
+                            <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+                            <option value="Information Technology">Information Technology (IT)</option>
+                            <option value="Electronics & Communication">Electronics & Communication (ECE)</option>
+                            <option value="Electrical & Electronics">Electrical & Electronics (EEE)</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="passingYear">Passing Out Year</label>
+                        <input type="number" id="passingYear" th:field="*{passingYear}" class="form-control" value="2026" min="2024" max="2030">
+                    </div>
+                </div>
+
+                <div style="background:#f8fafc; padding:16px; border-radius:10px; border:1px solid #e2e8f0; margin-bottom:20px;">
+                    <div style="font-size:0.85rem; font-weight:700; color:var(--text-primary); margin-bottom:12px;">📊 Academic Placement Eligibility Criteria:</div>
+                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;">
+                        <div>
+                            <label class="form-label" for="cgpa" style="font-size:0.8rem;">Current CGPA</label>
+                            <input type="number" step="0.01" min="0" max="10" id="cgpa" th:field="*{cgpa}" class="form-control" placeholder="8.0" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="tenth" style="font-size:0.8rem;">10th Std (%)</label>
+                            <input type="number" step="0.1" min="0" max="100" id="tenth" th:field="*{tenthPercentage}" class="form-control" placeholder="80.0" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="twelfth" style="font-size:0.8rem;">12th Std (%)</label>
+                            <input type="number" step="0.1" min="0" max="100" id="twelfth" th:field="*{twelfthPercentage}" class="form-control" placeholder="78.0" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="backlogs" style="font-size:0.8rem;">Active Backlogs</label>
+                            <input type="number" min="0" max="10" id="backlogs" th:field="*{activeBacklogs}" class="form-control" value="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="skills">Technical Skills (Comma-separated)</label>
+                    <input type="text" id="skills" th:field="*{skills}" class="form-control" placeholder="Java, Spring Boot, MySQL, JavaScript, Git">
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%; margin-top:8px;">Complete Registration</button>
+            </form>
+
+            <div style="text-align:center; margin-top:20px; font-size:0.88rem; color:var(--text-secondary);">
+                Already have an account? <a th:href="@{/login}" style="font-weight:700;">Sign in here</a>
+            </div>
+        </div>
+    </div>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

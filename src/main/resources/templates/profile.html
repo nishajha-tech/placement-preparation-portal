@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('My Academic Profile')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px; max-width:860px;">
+        <div style="margin-bottom: 24px;">
+            <h1 style="font-size:1.85rem; font-weight:800;">Academic Profile Management</h1>
+            <p style="color:var(--text-muted); font-size:0.95rem;">Update your academic criteria and technical skill set to recalculate your company eligibility in real-time.</p>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}">Profile updated!</div>
+
+        <div class="card">
+            <form th:action="@{/profile}" th:object="${student}" method="post">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="fullName">Full Name</label>
+                        <input type="text" id="fullName" th:field="*{fullName}" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address (Read-only)</label>
+                        <input type="email" id="email" th:field="*{email}" class="form-control" readonly style="background:#f1f5f9;">
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="phone">Phone Number</label>
+                        <input type="tel" id="phone" th:field="*{phone}" class="form-control">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="college">College / University</label>
+                        <input type="text" id="college" th:field="*{college}" class="form-control" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+                    <div class="form-group">
+                        <label class="form-label" for="degree">Degree</label>
+                        <select id="degree" th:field="*{degree}" class="form-control">
+                            <option value="B.Tech">B.Tech</option>
+                            <option value="B.E.">B.E.</option>
+                            <option value="MCA">MCA</option>
+                            <option value="BCA">BCA</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="branch">Branch</label>
+                        <select id="branch" th:field="*{branch}" class="form-control">
+                            <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+                            <option value="Information Technology">Information Technology (IT)</option>
+                            <option value="Electronics & Communication">Electronics & Communication (ECE)</option>
+                            <option value="Electrical & Electronics">Electrical & Electronics (EEE)</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="passingYear">Passing Year</label>
+                        <input type="number" id="passingYear" th:field="*{passingYear}" class="form-control">
+                    </div>
+                </div>
+
+                <div style="background:#f8fafc; padding:20px; border-radius:12px; border:1px solid #e2e8f0; margin-bottom:24px;">
+                    <div style="font-weight:700; font-size:0.95rem; margin-bottom:14px; color:var(--text-primary);">
+                        🎯 Critical Placement Eligibility Parameters:
+                    </div>
+                    <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:16px;">
+                        <div>
+                            <label class="form-label" for="cgpa">Current CGPA</label>
+                            <input type="number" step="0.01" min="0" max="10" id="cgpa" th:field="*{cgpa}" class="form-control" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="tenth">10th Std (%)</label>
+                            <input type="number" step="0.1" min="0" max="100" id="tenth" th:field="*{tenthPercentage}" class="form-control" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="twelfth">12th Std (%)</label>
+                            <input type="number" step="0.1" min="0" max="100" id="twelfth" th:field="*{twelfthPercentage}" class="form-control" required>
+                        </div>
+                        <div>
+                            <label class="form-label" for="backlogs">Active Backlogs</label>
+                            <input type="number" min="0" max="10" id="backlogs" th:field="*{activeBacklogs}" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="skills">Technical Skills</label>
+                    <textarea id="skills" th:field="*{skills}" class="form-control" placeholder="Java, Spring Boot, MySQL, REST APIs, Git..."></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:12px;">
+                    <a th:href="@{/dashboard}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Save Profile & Recalculate</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

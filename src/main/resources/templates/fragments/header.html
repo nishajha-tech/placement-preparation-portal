@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="header-head(title)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title} + ' - Placement Preparation Portal'">Placement Preparation Portal</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Main Design System CSS -->
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <!-- Top Navigation Fragment -->
+    <header th:fragment="navbar" class="navbar">
+        <div class="container nav-content">
+            <a th:href="@{/}" class="brand-logo">
+                <div class="brand-icon">🎓</div>
+                <span>PlacementPro</span>
+            </a>
+
+            <!-- Navigation Links -->
+            <ul class="nav-links">
+                <li class="nav-item" sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a th:href="@{/dashboard}">📊 Dashboard</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a th:href="@{/aptitude}">🧠 Aptitude Practice</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a th:href="@{/mock-test}">⏱️ Mock Tests</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a th:href="@{/coding}">💻 Java Coding</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a th:href="@{/resume}">📄 Resume Builder</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a th:href="@{/eligibility}">🎯 Eligibility Checker</a>
+                </li>
+                <li class="nav-item" sec:authorize="isAuthenticated() && !hasRole('ADMIN')">
+                    <a th:href="@{/analytics}">📈 Analytics</a>
+                </li>
+
+                <!-- Admin specific navigation -->
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/dashboard}">⚙️ Admin Dashboard</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/students}">👥 Students</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/questions}">❓ Questions</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/tests}">📝 Mock Tests</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a th:href="@{/admin/companies}">🏢 Companies</a>
+                </li>
+            </ul>
+
+            <!-- Auth Controls -->
+            <div class="nav-auth">
+                <div sec:authorize="!isAuthenticated()" style="display:flex; gap:10px;">
+                    <a th:href="@{/login}" class="btn btn-secondary btn-sm">Sign In</a>
+                    <a th:href="@{/register}" class="btn btn-primary btn-sm">Get Started</a>
+                </div>
+
+                <div sec:authorize="isAuthenticated()" style="display:flex; align-items:center; gap:14px;">
+                    <a th:href="@{/profile}" sec:authorize="!hasRole('ADMIN')" style="display:flex; align-items:center; gap:8px; text-decoration:none;">
+                        <div style="width:34px; height:34px; border-radius:50%; background:var(--primary-gradient); display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; font-size:0.85rem;">
+                            <span sec:authentication="name" th:text="${#strings.substring(#authentication.name, 0, 1).toUpperCase()}">U</span>
+                        </div>
+                        <span style="color:#ffffff; font-size:0.88rem; font-weight:600;" sec:authentication="name">User</span>
+                    </a>
+                    
+                    <span sec:authorize="hasRole('ADMIN')" style="color:#f59e0b; font-size:0.85rem; font-weight:700; padding:4px 10px; background:rgba(245, 158, 11, 0.15); border-radius:12px;">
+                        ADMINISTRATOR
+                    </span>
+
+                    <form th:action="@{/logout}" method="post" style="display:inline; margin:0;">
+                        <button type="submit" class="btn btn-secondary btn-sm" style="padding:6px 12px; font-size:0.82rem;">Sign Out</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </header>
+</body>
+</html>

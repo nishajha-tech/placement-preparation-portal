@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: placement-preparation-portal
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: h2

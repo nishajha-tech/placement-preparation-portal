@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Administrator Dashboard')}"></head>
+<body style="background:#f8fafc;">
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                    <span class="badge" style="background:#f59e0b; color:#fff;">TPO Admin Console</span>
+                </div>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Placement Administration Hub</h1>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Manage student registration data, question banks, timed mock assessments, and campus recruiters.</p>
+            </div>
+            
+            <div style="display:flex; gap:10px;">
+                <a th:href="@{/admin/questions}" class="btn btn-primary btn-sm">+ Add Question</a>
+                <a th:href="@{/admin/companies}" class="btn btn-outline btn-sm">+ Add Company</a>
+            </div>
+        </div>
+
+        <!-- Admin System Stat Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon primary">👥</div>
+                <div>
+                    <div class="stat-value" th:text="${stats.totalStudents}">2</div>
+                    <div class="stat-label">Registered Students</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon success">❓</div>
+                <div>
+                    <div class="stat-value" th:text="${stats.totalQuestions}">20</div>
+                    <div class="stat-label">Question Bank Items</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon warning">📝</div>
+                <div>
+                    <div class="stat-value" th:text="${stats.totalMockTests}">3</div>
+                    <div class="stat-label">Active Mock Tests</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon secondary">🏢</div>
+                <div>
+                    <div class="stat-value" th:text="${stats.totalCompanies}">7</div>
+                    <div class="stat-label">Recruiter Companies</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon primary">🎯</div>
+                <div>
+                    <div class="stat-value" th:text="${stats.totalAttempts}">1</div>
+                    <div class="stat-label">Total Test Attempts</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Admin Management Modules -->
+        <div style="margin-bottom:36px;">
+            <h3 style="font-size:1.2rem; font-weight:700; margin-bottom:14px;">Administrative Modules</h3>
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+                <a th:href="@{/admin/students}" class="action-card">
+                    <span class="icon">👥</span>
+                    <span class="title">Manage Students</span>
+                    <span class="desc">View student profiles, CGPA, backlogs & test activity</span>
+                </a>
+                <a th:href="@{/admin/questions}" class="action-card">
+                    <span class="icon">❓</span>
+                    <span class="title">Question Bank</span>
+                    <span class="desc">Add, edit, and organize aptitude & technical questions</span>
+                </a>
+                <a th:href="@{/admin/tests}" class="action-card">
+                    <span class="icon">📝</span>
+                    <span class="title">Mock Tests Manager</span>
+                    <span class="desc">Create new timed company mock assessments</span>
+                </a>
+                <a th:href="@{/admin/companies}" class="action-card">
+                    <span class="icon">🏢</span>
+                    <span class="title">Company Criteria</span>
+                    <span class="desc">Configure campus recruiter packages & cutoff criteria</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Registered Students Overview Table -->
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Enrolled Campus Students</h3>
+                <a th:href="@{/admin/students}" style="font-size:0.85rem; font-weight:600;">View All Students →</a>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student Name</th>
+                            <th>College & Branch</th>
+                            <th>CGPA</th>
+                            <th>10th / 12th (%)</th>
+                            <th>Backlogs</th>
+                            <th>Skills</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="s : ${recentStudents}">
+                            <td>
+                                <strong th:text="${s.fullName}">Rahul Sharma</strong>
+                                <div style="font-size:0.75rem; color:var(--text-muted);" th:text="${s.email}">rahul@student.com</div>
+                            </td>
+                            <td>
+                                <div th:text="${s.branch}">Computer Science</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);" th:text="${s.college}">College Name</div>
+                            </td>
+                            <td>
+                                <strong th:text="${s.cgpa}">8.4</strong>
+                            </td>
+                            <td th:text="${s.tenthPercentage} + '% / ' + ${s.twelfthPercentage} + '%'">88% / 85%</td>
+                            <td>
+                                <span th:if="${s.activeBacklogs == 0}" class="badge badge-success">0 Backlogs</span>
+                                <span th:if="${s.activeBacklogs > 0}" class="badge badge-warning" th:text="${s.activeBacklogs} + ' Backlog'">1 Backlog</span>
+                            </td>
+                            <td style="max-width:260px; font-size:0.8rem; color:var(--text-secondary);" th:text="${s.skills}">
+                                Java, Spring Boot, MySQL
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

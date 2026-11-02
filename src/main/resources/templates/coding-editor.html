@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Solve - ' + ${problem.title})}"></head>
+<body style="background:#0f172a; color:#fff;">
+    <!-- Compact Navbar -->
+    <header class="navbar" style="position:static;">
+        <div class="container nav-content">
+            <a th:href="@{/coding}" class="brand-logo" style="font-size:1.05rem;">
+                ← Back to Problem List
+            </a>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span class="badge badge-primary" th:text="${problem.category}">Arrays</span>
+                <span th:if="${problem.difficulty == 'EASY'}" class="badge badge-success">EASY</span>
+                <span th:if="${problem.difficulty == 'MEDIUM'}" class="badge badge-warning">MEDIUM</span>
+                <span th:if="${problem.difficulty == 'HARD'}" class="badge badge-danger">HARD</span>
+            </div>
+            <div>
+                <a th:href="@{/dashboard}" class="btn btn-secondary btn-sm">Dashboard</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 16px 24px 32px;">
+        <div class="editor-layout">
+            <!-- Left Pane: Problem Statement -->
+            <div class="card" style="background:#1e293b; color:#fff; border-color:#334155; overflow-y:auto; height:100%; padding:28px;">
+                <h1 style="font-size:1.6rem; font-weight:800; margin-bottom:12px; color:#ffffff;" th:text="${problem.title}">
+                    Two Sum
+                </h1>
+
+                <div style="font-size:0.95rem; line-height:1.7; color:#cbd5e1; margin-bottom:24px; white-space:pre-line;" th:text="${problem.description}">
+                    Problem description goes here...
+                </div>
+
+                <div style="background:#0f172a; padding:16px; border-radius:10px; border:1px solid #334155; margin-bottom:20px;">
+                    <div style="font-size:0.8rem; font-weight:700; color:#38bdf8; text-transform:uppercase; margin-bottom:6px;">Sample Test Case:</div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.85rem; color:#a5b4fc;">
+                        Input: <span th:text="${problem.sampleInput}">[2, 7, 11, 15], 9</span>
+                    </div>
+                    <div style="font-family:'JetBrains Mono', monospace; font-size:0.85rem; color:#34d399; margin-top:4px;">
+                        Expected Output: <span th:text="${problem.sampleOutput}">[0, 1]</span>
+                    </div>
+                </div>
+
+                <!-- Solution Approach & Complexity Advice -->
+                <div style="background:rgba(99, 102, 241, 0.1); padding:16px; border-radius:10px; border:1px solid rgba(99, 102, 241, 0.3);">
+                    <div style="font-size:0.82rem; font-weight:700; color:#818cf8; text-transform:uppercase; margin-bottom:4px;">💡 Technical Approach:</div>
+                    <p style="font-size:0.85rem; color:#c7d2fe; line-height:1.6;" th:text="${problem.solutionApproach}">
+                        Time and space complexity approach details.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Right Pane: Code Editor & Sandboxed Console -->
+            <div class="editor-pane">
+                <div class="editor-header">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:0.85rem; font-weight:700; color:#38bdf8;">⚡ Java 21 Sandbox</span>
+                        <span style="font-size:0.75rem; color:#888;">Class: Solution</span>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button type="button" id="resetCodeBtn" class="btn btn-secondary btn-sm" style="background:#333; font-size:0.78rem;">Reset</button>
+                        <button type="button" id="runCodeBtn" class="btn btn-secondary btn-sm" th:attr="data-problem-id=${problem.id}" style="background:#2563eb; color:#fff;">
+                            ▶ Run Code
+                        </button>
+                        <button type="button" id="submitCodeBtn" class="btn btn-success btn-sm" th:attr="data-problem-id=${problem.id}">
+                            Submit Solution 🚀
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Code Editor Area -->
+                <textarea id="sourceCodeEditor" class="code-textarea" spellcheck="false" th:text="${problem.starterCode}">
+public class Solution {
+    // Write your solution here
+}
+                </textarea>
+
+                <!-- Interactive Execution Console -->
+                <div class="console-pane">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; border-bottom:1px solid #27272a; padding-bottom:6px;">
+                        <span style="font-weight:700; color:#e4e4e7; font-size:0.8rem;">TEST EXECUTION CONSOLE</span>
+                        <span style="font-size:0.75rem; color:#71717a;">Timeout Limit: 2.0s</span>
+                    </div>
+                    <div id="consoleOutput">
+                        Click <strong>"▶ Run Code"</strong> to evaluate against sample test cases or <strong>"Submit Solution"</strong> to record your answer.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

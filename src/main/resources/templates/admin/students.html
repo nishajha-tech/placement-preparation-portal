@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Manage Students - Admin')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+                <a th:href="@{/admin/dashboard}" style="font-size:0.85rem; font-weight:600; color:var(--primary); margin-bottom:4px; display:inline-block;">← Back to Admin Console</a>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Student Roster Management</h1>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Review student academic credentials, contact info, and training performance.</p>
+            </div>
+            <span class="badge badge-primary" style="font-size:0.9rem; padding:8px 16px;">
+                Total Students: <strong th:text="${students.size()}">2</strong>
+            </span>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}">Success message</div>
+
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Contact</th>
+                            <th>Degree & Branch</th>
+                            <th>CGPA</th>
+                            <th>10th / 12th</th>
+                            <th>Backlogs</th>
+                            <th>Pass Year</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="s : ${students}">
+                            <td>
+                                <strong th:text="${s.fullName}">Rahul Sharma</strong>
+                                <div style="font-size:0.75rem; color:var(--text-muted);" th:text="${s.college}">College</div>
+                            </td>
+                            <td>
+                                <div style="font-size:0.85rem;" th:text="${s.email}">email</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);" th:text="${s.phone}">phone</div>
+                            </td>
+                            <td>
+                                <div th:text="${s.degree}">B.Tech</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted);" th:text="${s.branch}">CSE</div>
+                            </td>
+                            <td>
+                                <strong th:text="${s.cgpa}">8.4</strong>
+                            </td>
+                            <td th:text="${s.tenthPercentage} + '% / ' + ${s.twelfthPercentage} + '%'">88% / 85%</td>
+                            <td>
+                                <span th:if="${s.activeBacklogs == 0}" class="badge badge-success">0</span>
+                                <span th:if="${s.activeBacklogs > 0}" class="badge badge-warning" th:text="${s.activeBacklogs}">1</span>
+                            </td>
+                            <td th:text="${s.passingYear}">2026</td>
+                            <td>
+                                <form th:action="@{'/admin/students/' + ${s.id} + '/delete'}" method="post" onsubmit="return confirm('Are you sure you want to remove this student record?');" style="margin:0;">
+                                    <button type="submit" class="btn btn-outline btn-sm" style="color:#ef4444; border-color:#fecaca;">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

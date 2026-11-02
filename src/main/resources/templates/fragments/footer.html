@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <footer th:fragment="footer" class="footer">
+        <div class="container footer-content">
+            <div>
+                <strong style="color:#ffffff;">Placement Preparation Portal</strong>
+                <p style="font-size:0.82rem; margin-top:4px;">Full-Stack Java College Project | Spring Boot 3, Spring Security, MySQL & Thymeleaf</p>
+            </div>
+            <div style="display:flex; gap:20px; font-size:0.85rem;">
+                <a th:href="@{/dashboard}" style="color:#94a3b8;">Dashboard</a>
+                <a th:href="@{/aptitude}" style="color:#94a3b8;">Aptitude</a>
+                <a th:href="@{/mock-test}" style="color:#94a3b8;">Mock Tests</a>
+                <a th:href="@{/coding}" style="color:#94a3b8;">Java Coding</a>
+                <a th:href="@{/resume}" style="color:#94a3b8;">Resume</a>
+                <a th:href="@{/eligibility}" style="color:#94a3b8;">Eligibility</a>
+            </div>
+            <div style="font-size:0.82rem;">
+                &copy; <span th:text="${#calendars.year(#calendars.createNow())}">2026</span> PlacementPro. Built for College Viva Demonstration.
+            </div>
+        </div>
+        <!-- Global JS -->
+        <script th:src="@{/js/app.js}"></script>
+    </footer>
+</body>
+</html>

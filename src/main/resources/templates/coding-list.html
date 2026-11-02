@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Java Coding Challenges')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+            <div>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Java Coding Practice Sandbox</h1>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Curated data structures and algorithm problems frequently asked in technical placement interviews.</p>
+            </div>
+            <div class="badge badge-success" style="font-size:0.9rem; padding:8px 16px;">
+                Solved: <strong th:text="${solvedCount}" style="margin-left:4px;">0</strong> / <span th:text="${problems.size()}">4</span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Problem Title</th>
+                            <th>Category</th>
+                            <th>Difficulty</th>
+                            <th>Sample Input & Output</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${problems}">
+                            <td>
+                                <span th:if="${#lists.contains(solvedIds, p.id)}" style="color:#10b981; font-weight:700; font-size:1.1rem;" title="Solved">✓ Solved</span>
+                                <span th:unless="${#lists.contains(solvedIds, p.id)}" style="color:#94a3b8; font-size:0.85rem;">Unsolved</span>
+                            </td>
+                            <td>
+                                <a th:href="@{'/coding/' + ${p.id}}" style="font-weight:700; font-size:1rem; color:var(--text-primary);" th:text="${p.title}">
+                                    Two Sum
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge badge-primary" th:text="${p.category}">Arrays</span>
+                            </td>
+                            <td>
+                                <span th:if="${p.difficulty == 'EASY'}" class="badge badge-success">EASY</span>
+                                <span th:if="${p.difficulty == 'MEDIUM'}" class="badge badge-warning">MEDIUM</span>
+                                <span th:if="${p.difficulty == 'HARD'}" class="badge badge-danger">HARD</span>
+                            </td>
+                            <td>
+                                <div style="font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--text-secondary);">
+                                    In: <span th:text="${p.sampleInput}">[2, 7, 11, 15], 9</span>
+                                </div>
+                                <div style="font-family:'JetBrains Mono', monospace; font-size:0.78rem; color:var(--text-secondary);">
+                                    Out: <span th:text="${p.sampleOutput}">[0, 1]</span>
+                                </div>
+                            </td>
+                            <td>
+                                <a th:href="@{'/coding/' + ${p.id}}" class="btn btn-primary btn-sm">
+                                    Solve Problem 💻
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

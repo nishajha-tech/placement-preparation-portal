@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Question Bank - Admin')}"></head>
+<body>
+    <header th:replace="~{fragments/header :: navbar}"></header>
+
+    <main class="container" style="padding: 40px 24px;">
+        <div style="margin-bottom: 28px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+            <div>
+                <a th:href="@{/admin/dashboard}" style="font-size:0.85rem; font-weight:600; color:var(--primary); margin-bottom:4px; display:inline-block;">← Back to Admin Console</a>
+                <h1 style="font-size:2rem; font-weight:800; color:var(--text-primary);">Question Bank Repository</h1>
+                <p style="color:var(--text-muted); font-size:0.95rem;">Create, filter, and maintain aptitude and technical questions used in practice and mock exams.</p>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="document.getElementById('addQuestionModal').style.display='block'">
+                + Add New Question
+            </button>
+        </div>
+
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}">Success</div>
+
+        <!-- Add Question Card Form (Collapsible/Modal style) -->
+        <div id="addQuestionModal" class="card" style="display:none; padding:32px; margin-bottom:32px; background:#f8fafc; border:2px solid var(--primary);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px;">
+                <h3 style="font-size:1.25rem; font-weight:700; color:var(--text-primary);">Add New Placement Question</h3>
+                <button type="button" class="btn btn-outline btn-sm" onclick="document.getElementById('addQuestionModal').style.display='none'">✕ Close</button>
+            </div>
+
+            <form th:action="@{/admin/questions/add}" th:object="${newQuestion}" method="post">
+                <div class="form-group">
+                    <label class="form-label">Question Statement *</label>
+                    <textarea th:field="*{questionText}" class="form-control" rows="3" placeholder="Enter full question text..." required></textarea>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label class="form-label">Option A *</label>
+                        <input type="text" th:field="*{optionA}" class="form-control" placeholder="Option A value" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Option B *</label>
+                        <input type="text" th:field="*{optionB}" class="form-control" placeholder="Option B value" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                    <div class="form-group">
+                        <label class="form-label">Option C *</label>
+                        <input type="text" th:field="*{optionC}" class="form-control" placeholder="Option C value" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Option D *</label>
+                        <input type="text" th:field="*{optionD}" class="form-control" placeholder="Option D value" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px;">
+                    <div class="form-group">
+                        <label class="form-label">Correct Key *</label>
+                        <select th:field="*{correctOption}" class="form-control">
+                            <option value="A">Option A</option>
+                            <option value="B">Option B</option>
+                            <option value="C">Option C</option>
+                            <option value="D">Option D</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Category *</label>
+                        <select th:field="*{category}" class="form-control">
+                            <option value="QUANTITATIVE">Quantitative</option>
+                            <option value="LOGICAL">Logical Reasoning</option>
+                            <option value="VERBAL">Verbal Ability</option>
+                            <option value="TECHNICAL">Technical & Java</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Topic Name</label>
+                        <input type="text" th:field="*{topic}" class="form-control" placeholder="e.g. Time & Work">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Difficulty *</label>
+                        <select th:field="*{difficulty}" class="form-control">
+                            <option value="EASY">Easy</option>
+                            <option value="MEDIUM">Medium</option>
+                            <option value="HARD">Hard</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Step-by-Step Explanation & Formula Breakdown</label>
+                    <textarea th:field="*{explanation}" class="form-control" rows="3" placeholder="Explain how to solve step by step..."></textarea>
+                </div>
+
+                <div style="display:flex; justify-content:flex-end; gap:10px;">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('addQuestionModal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save to Question Bank</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-bar">
+            <div class="nav-tabs">
+                <a th:href="@{/admin/questions(category='ALL')}" class="tab-link" th:classappend="${selectedCategory == 'ALL'} ? 'active' : ''">All Questions</a>
+                <a th:href="@{/admin/questions(category='QUANTITATIVE')}" class="tab-link" th:classappend="${selectedCategory == 'QUANTITATIVE'} ? 'active' : ''">Quantitative</a>
+                <a th:href="@{/admin/questions(category='LOGICAL')}" class="tab-link" th:classappend="${selectedCategory == 'LOGICAL'} ? 'active' : ''">Logical Reasoning</a>
+                <a th:href="@{/admin/questions(category='VERBAL')}" class="tab-link" th:classappend="${selectedCategory == 'VERBAL'} ? 'active' : ''">Verbal Ability</a>
+                <a th:href="@{/admin/questions(category='TECHNICAL')}" class="tab-link" th:classappend="${selectedCategory == 'TECHNICAL'} ? 'active' : ''">Technical & Java</a>
+            </div>
+            <span style="font-size:0.85rem; color:var(--text-muted);" th:text="${questions.size()} + ' questions listed'">20 questions</span>
+        </div>
+
+        <!-- Questions Table -->
+        <div class="card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Question</th>
+                            <th>Category & Topic</th>
+                            <th>Difficulty</th>
+                            <th>Correct Key</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="q, iterStat : ${questions}">
+                            <td th:text="${iterStat.count}">1</td>
+                            <td style="max-width:380px;">
+                                <div style="font-weight:600; line-height:1.5;" th:text="${q.questionText}">Question text</div>
+                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+                                    A: <span th:text="${q.optionA}">Opt A</span> | B: <span th:text="${q.optionB}">Opt B</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge badge-primary" th:text="${q.category}">QUANTITATIVE</span>
+                                <div style="font-size:0.75rem; color:var(--text-muted); margin-top:2px;" th:text="${q.topic}">Topic</div>
+                            </td>
+                            <td>
+                                <span th:if="${q.difficulty == 'EASY'}" class="badge badge-success">EASY</span>
+                                <span th:if="${q.difficulty == 'MEDIUM'}" class="badge badge-warning">MEDIUM</span>
+                                <span th:if="${q.difficulty == 'HARD'}" class="badge badge-danger">HARD</span>
+                            </td>
+                            <td>
+                                <strong style="color:#059669; font-size:1rem;" th:text="'Option ' + ${q.correctOption}">Option B</strong>
+                            </td>
+                            <td>
+                                <form th:action="@{'/admin/questions/' + ${q.id} + '/delete'}" method="post" onsubmit="return confirm('Delete this question from question bank?');" style="margin:0;">
+                                    <button type="submit" class="btn btn-outline btn-sm" style="color:#ef4444; border-color:#fecaca;">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>

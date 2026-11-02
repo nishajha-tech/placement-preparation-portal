@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header-head('Exam Hall - ' + ${test.title})}"></head>
+<body style="background:#f1f5f9;">
+    <!-- Minimalist Exam Header -->
+    <header style="background:#0f172a; color:#fff; padding:14px 24px; position:sticky; top:0; z-index:100; box-shadow:0 4px 12px rgba(0,0,0,0.2);">
+        <div class="container" style="display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="font-size:1.3rem;">🎓</span>
+                <div>
+                    <strong style="font-size:1rem; color:#fff;" th:text="${test.title}">TCS NQT Mock Test</strong>
+                    <div style="font-size:0.75rem; color:#94a3b8;" th:text="${student.fullName} + ' (' + ${student.email} + ')'">Candidate Details</div>
+                </div>
+            </div>
+
+            <!-- Countdown Timer -->
+            <div style="display:flex; align-items:center; gap:16px;">
+                <div class="test-timer">
+                    <span>⏱️</span>
+                    <span id="timerDisplay">20:00</span>
+                </div>
+                <button type="button" id="submitTestBtn" class="btn btn-success btn-sm">
+                    Submit Test 🚀
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container" style="padding: 24px;">
+        <form id="mockTestForm" th:action="@{'/mock-test/' + ${test.id} + '/submit'}" method="post"
+              th:attr="data-duration=${durationSeconds}">
+            
+            <input type="hidden" id="timeTakenSecondsInput" name="timeTakenSeconds" value="0">
+
+            <div class="test-layout">
+                <!-- Left Pane: Active Question -->
+                <div class="card" style="padding:32px; min-height:480px; display:flex; flex-direction:column; justify-content:space-between;">
+                    
+                    <div id="questionsContainer">
+                        <div th:each="q, iterStat : ${questions}" class="test-question-item"
+                             th:id="'question_wrapper_' + ${iterStat.index}"
+                             th:style="${iterStat.index == 0} ? 'display:block;' : 'display:none;'">
+                            
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <span class="badge badge-dark" th:text="'Question ' + ${iterStat.count} + ' of ' + ${questions.size()}">Question 1 of 10</span>
+                                    <span class="badge badge-primary" th:text="${q.category}">QUANTITATIVE</span>
+                                    <span th:if="${q.topic}" class="badge" style="background:#f1f5f9; color:#475569;" th:text="${q.topic}">Topic</span>
+                                </div>
+                                <span class="badge badge-warning" th:text="${q.difficulty}">MEDIUM</span>
+                            </div>
+
+                            <div style="font-size:1.15rem; font-weight:600; line-height:1.6; margin-bottom:24px;" th:text="${q.questionText}">
+                                Question statement goes here...
+                            </div>
+
+                            <div class="options-grid">
+                                <label class="option-label">
+                                    <input type="radio" th:name="'q_' + ${q.id}" value="A">
+                                    <span><strong>A.</strong> <span th:text="${q.optionA}">Option A</span></span>
+                                </label>
+                                <label class="option-label">
+                                    <input type="radio" th:name="'q_' + ${q.id}" value="B">
+                                    <span><strong>B.</strong> <span th:text="${q.optionB}">Option B</span></span>
+                                </label>
+                                <label class="option-label">
+                                    <input type="radio" th:name="'q_' + ${q.id}" value="C">
+                                    <span><strong>C.</strong> <span th:text="${q.optionC}">Option C</span></span>
+                                </label>
+                                <label class="option-label">
+                                    <input type="radio" th:name="'q_' + ${q.id}" value="D">
+                                    <span><strong>D.</strong> <span th:text="${q.optionD}">Option D</span></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question Navigation Footer -->
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #e2e8f0; padding-top:20px; margin-top:20px; flex-wrap:wrap; gap:10px;">
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" id="prevQuestionBtn" class="btn btn-outline btn-sm">← Previous</button>
+                            <button type="button" id="nextQuestionBtn" class="btn btn-primary btn-sm">Next →</button>
+                        </div>
+                        <div style="display:flex; gap:10px;">
+                            <button type="button" id="clearSelectionBtn" class="btn btn-outline btn-sm" style="color:#ef4444; border-color:#fecaca;">Clear Choice</button>
+                            <button type="button" id="markReviewBtn" class="btn btn-outline btn-sm" style="color:#8b5cf6; border-color:#ddd6fe;">Flag for Review</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Pane: Question Palette & Legend -->
+                <div>
+                    <div class="card" style="padding:24px;">
+                        <h4 style="font-size:1rem; font-weight:700; margin-bottom:14px; color:var(--text-primary);">Question Palette</h4>
+                        
+                        <!-- Legend -->
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:0.75rem; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid #e2e8f0;">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="width:12px; height:12px; border-radius:3px; background:var(--success); display:inline-block;"></span>
+                                <span>Answered</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="width:12px; height:12px; border-radius:3px; background:#e2e8f0; display:inline-block;"></span>
+                                <span>Not Answered</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="width:12px; height:12px; border-radius:3px; background:var(--accent); display:inline-block;"></span>
+                                <span>Marked Review</span>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span style="width:12px; height:12px; border-radius:3px; border:2px solid var(--primary); display:inline-block;"></span>
+                                <span>Current</span>
+                            </div>
+                        </div>
+
+                        <!-- Buttons Grid -->
+                        <div class="palette-grid">
+                            <button type="button" th:each="q, iterStat : ${questions}"
+                                    class="palette-btn unanswered"
+                                    th:classappend="${iterStat.index == 0} ? 'current' : ''"
+                                    th:attr="data-index=${iterStat.index}"
+                                    th:text="${iterStat.count}">
+                                1
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
